@@ -1,77 +1,92 @@
 document.addEventListener('DOMContentLoaded', () => {
     const starsContainer = document.getElementById('stars-container');
+    const skillButtons = document.querySelectorAll('.skill-btn');
 
-    function createStar(initialX, initialY) {
+    // Create stars
+    function createStar(x, y) {
         const star = document.createElement('div');
         star.classList.add('star');
-
-        // Position
-        // If coordinates provided, use them (for mouse effects), otherwise random
-        const x = initialX !== undefined ? initialX : Math.random() * window.innerWidth;
-        const y = initialY !== undefined ? initialY : Math.random() * window.innerHeight;
-
         star.style.left = `${x}px`;
         star.style.top = `${y}px`;
 
         // Random size
-        const size = Math.random() * 2 + 1; // 1px to 3px
+        const size = Math.random() * 3 + 1;
         star.style.width = `${size}px`;
         star.style.height = `${size}px`;
 
-        // Initial opacity 0
-        star.style.opacity = '0';
+        // Random opacity
+        star.style.opacity = Math.random() * 0.5 + 0.1;
 
         starsContainer.appendChild(star);
 
-        // Animation parameters
-        const duration = Math.random() * 3000 + 2000; // 2s to 5s
-
-        // Movement calculated relative to start
-        const angle = Math.random() * Math.PI * 2;
-        const distance = Math.random() * 60 + 20; // 20px to 80px move
-        const xShift = Math.cos(angle) * distance;
-        const yShift = Math.sin(angle) * distance;
-
-        // Force reflow to ensure valid starting state
-        star.offsetHeight;
-
-        // Apply transitions
-        // We transition opacity and transform
-        star.style.transition = `opacity ${duration}ms ease-in-out, transform ${duration}ms linear`;
-
-        // Set target styles
-        requestAnimationFrame(() => {
-            star.style.opacity = (Math.random() * 1.0 + 0.5).toString(); // Fade to 0.5-1.5
-            star.style.transform = `translate(${xShift}px, ${yShift}px)`;
-        });
-
-        // Start fading out before the movement ends
-        setTimeout(() => {
-            star.style.opacity = '0';
-        }, duration * 0.8); // Fade out at 70% of duration
-
-        // Remove after duration
-        setTimeout(() => {
-            if (star.parentNode) {
-                star.parentNode.removeChild(star);
-            }
-        }, duration);
+        // Animate star
+        animateStar(star);
     }
+
+    function animateStar(star) {
+        const duration = Math.random() * 3000 + 1000;
+        const delay = Math.random() * 1000;
+
+        // Fade in
+        star.style.transition = `opacity ${duration / 2}ms ease-out ${delay}ms`;
+        star.style.opacity = '0.8';
+
+        // Move diagonally
+        const angle = Math.random() * Math.PI * 2;
+        const distance = Math.random() * 100 + 50;
+        const xEnd = parseFloat(star.style.left) + Math.cos(angle) * distance;
+        const yEnd = parseFloat(star.style.top) + Math.sin(angle) * distance;
+
+        star.style.transition = `left ${duration}ms ease-out ${delay}ms, top ${duration}ms ease-out ${delay}ms, opacity ${duration / 2}ms ease-in ${delay + duration / 2}ms`;
+
+        setTimeout(() => {
+            star.style.left = `${xEnd}px`;
+            star.style.top = `${yEnd}px`;
+            star.style.opacity = '0';
+        }, 50);
+
+        // Remove star after animation
+        setTimeout(() => {
+            star.remove();
+        }, delay + duration + 50);
+    }
+
+    // Create initial stars randomly
+    function createInitialStars() {
+        for (let i = 0; i < 50; i++) {
+            const x = Math.random() * window.innerWidth;
+            const y = Math.random() * window.innerHeight;
+            createStar(x, y);
+        }
+    }
+
+    // Handle button clicks
+    skillButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+            const rect = button.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            // Create burst of stars
+            for (let i = 0; i < 30; i++) {
+                // Create stars in a circular pattern around the button
+                const angle = Math.random() * Math.PI * 2;
+                const radius = Math.random() * 50;
+                const x = centerX + Math.cos(angle) * radius;
+                const y = centerY + Math.sin(angle) * radius;
+                createStar(x, y);
+            }
+        });
+    });
 
     // Create stars on mouse move
     document.addEventListener('mousemove', (e) => {
-        // Reduced frequency for performance
         if (Math.random() > 0.7) {
             createStar(e.clientX, e.clientY);
         }
     });
 
-    // Continuous background generation
-    // Create a new star every 100ms
-    setInterval(() => createStar(), 100);
-
-    // Create an initial batch so it's not empty at load
-    for (let i = 0; i < 50; i++) {
-        createStar();
-    }
+    // Initialize
+    createInitialStars();
+    setInterval(createInitialStars, 2000);
 });
