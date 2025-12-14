@@ -24,19 +24,8 @@ document.querySelectorAll('#mobile-menu a').forEach(link => {
 });
 
 // Vanta.js Background
-VANTA.GLOBE({
-    el: "#vanta-bg",
-    mouseControls: true,
-    touchControls: true,
-    gyroControls: false,
-    minHeight: 200.00,
-    minWidth: 200.00,
-    scale: 1.00,
-    scaleMobile: 1.00,
-    color1: 0x1F2937,
-    color2: 0x4B5563,
-    backgroundColor: 0x000000
-});
+// Vanta.js background removed
+
 
 // Typing Animation
 const texts = ["machine learning models", "data-driven insights", "web applications"];

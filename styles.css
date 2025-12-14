@@ -6,6 +6,13 @@ body {
     overflow-x: hidden;
 }
 
+[data-feather] {
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+    vertical-align: text-bottom;
+}
+
 .glow {
     text-shadow: 0 0 10px rgba(99, 102, 241, 0.7);
 }
@@ -34,9 +41,17 @@ body {
     margin-right: 4px;
 }
 
-.dot-red { background-color: #ff5f56; }
-.dot-yellow { background-color: #ffbd2e; }
-.dot-green { background-color: #27c93f; }
+.dot-red {
+    background-color: #ff5f56;
+}
+
+.dot-yellow {
+    background-color: #ffbd2e;
+}
+
+.dot-green {
+    background-color: #27c93f;
+}
 
 .terminal-content {
     padding: 20px;
@@ -108,8 +123,15 @@ body {
 }
 
 @keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0; }
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
 }
 
 header {
