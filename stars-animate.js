@@ -41,14 +41,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Set target styles
         requestAnimationFrame(() => {
-            star.style.opacity = (Math.random() * 0.6 + 0.2).toString(); // Fade to 0.2-0.8
+            star.style.opacity = (Math.random() * 1.0 + 0.5).toString(); // Fade to 0.5-1.5
             star.style.transform = `translate(${xShift}px, ${yShift}px)`;
         });
 
         // Start fading out before the movement ends
         setTimeout(() => {
             star.style.opacity = '0';
-        }, duration * 0.7); // Fade out at 70% of duration
+        }, duration * 0.8); // Fade out at 70% of duration
 
         // Remove after duration
         setTimeout(() => {
@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Create stars on mouse move
     document.addEventListener('mousemove', (e) => {
         // Reduced frequency for performance
-        if (Math.random() > 0.9) {
+        if (Math.random() > 0.7) {
             createStar(e.clientX, e.clientY);
         }
     });

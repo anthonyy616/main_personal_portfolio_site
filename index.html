@@ -8,17 +8,26 @@
     <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/feather-icons"></script>
-    <!-- Vanta.js removed -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="background.js" defer></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
     <link rel="stylesheet" href="styles.css">
-    <script src="stars-animate.js" defer></script>
 </head>
 
-<body class="bg-white text-gray-900 dark:bg-black dark:text-gray-100">
+<body class="bg-white text-gray-900 dark:bg-black dark:text-gray-100 overflow-hidden">
+
+    <!-- Preloader -->
+    <div id="preloader"
+        class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white dark:bg-black transition-opacity duration-700">
+        <h1 id="greeting-main" class="text-6xl md:text-8xl font-bold mb-4 opacity-0 transition-opacity duration-300">
+        </h1>
+        <p id="greeting-sub"
+            class="text-xl md:text-2xl text-gray-500 font-light opacity-0 transition-opacity duration-300"></p>
+    </div>
 
     <!-- Background Animation -->
-    <div id="stars-container"></div>
-    <div class="fixed top-0 left-0 w-full h-full bg-black z-0"></div>
+    <div id="canvas-container" class="fixed top-0 left-0 w-full h-full z-0 pointer-events-none"></div>
+    <div class="fixed top-0 left-0 w-full h-full bg-white/10 dark:bg-black/10 z-0 pointer-events-none"></div>
 
     <!-- Main Content -->
     <div class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -236,7 +245,7 @@
                 <div class="flex flex-col md:flex-row items-center gap-10">
                     <div class="md:w-1/3">
                         <div class="bg-gray-800 rounded-full p-2 w-64 h-64 mx-auto">
-                            <img src="https://via.placeholder.com/300" alt="Anthony Ogbuah"
+                            <img src="images/virtual_me.jpeg" alt="Virtual Anthony"
                                 class="rounded-full w-full h-full object-cover">
                         </div>
                     </div>
@@ -287,38 +296,45 @@
                     <div class="project-slide active">
                         <div class="project-slide-content">
                             <div
-                                class="project-card bg-gray-800 rounded-xl overflow-hidden border border-gray-700 max-w-2xl mx-auto">
-                                <div class="h-64 bg-gradient-to-r from-cyan-500 to-blue-600"></div>
+                                class="project-card bg-white dark:bg-gray-800 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 max-w-2xl mx-auto shadow-lg">
+                                <div class="h-64 w-full overflow-hidden">
+                                    <img src="images/antlyst.jpg" alt="Antlyst Dashboard"
+                                        class="w-full h-full object-cover">
+                                </div>
                                 <div class="p-8">
-                                    <h3 class="text-2xl font-bold mb-3">Antlyst - Data Visualization Platform</h3>
-                                    <p class="text-gray-400 mb-6">A full-stack data visualization SaaS platform that
+                                    <h3 class="text-2xl font-bold mb-3 text-gray-900 dark:text-white">Antlyst - Data
+                                        Visualization Platform</h3>
+                                    <p class="text-gray-600 dark:text-gray-400 mb-6">A full-stack data visualization
+                                        SaaS platform that
                                         allows users to upload CSV files and generate interactive dashboards in multiple
                                         styles (ML plots, Power BI-style, etc.) in under a minute.</p>
                                     <div class="flex flex-wrap gap-2 mb-6">
                                         <span
-                                            class="bg-indigo-900 text-indigo-300 text-sm px-3 py-1 rounded">Next.js</span>
+                                            class="bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 text-sm px-3 py-1 rounded">Next.js</span>
                                         <span
-                                            class="bg-indigo-900 text-indigo-300 text-sm px-3 py-1 rounded">React</span>
+                                            class="bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 text-sm px-3 py-1 rounded">React</span>
                                         <span
-                                            class="bg-indigo-900 text-indigo-300 text-sm px-3 py-1 rounded">TypeScript</span>
+                                            class="bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 text-sm px-3 py-1 rounded">TypeScript</span>
                                         <span
-                                            class="bg-indigo-900 text-indigo-300 text-sm px-3 py-1 rounded">Prisma</span>
+                                            class="bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 text-sm px-3 py-1 rounded">Prisma</span>
                                         <span
-                                            class="bg-indigo-900 text-indigo-300 text-sm px-3 py-1 rounded">Plotly.js</span>
+                                            class="bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 text-sm px-3 py-1 rounded">Plotly.js</span>
                                         <span
-                                            class="bg-indigo-900 text-indigo-300 text-sm px-3 py-1 rounded">Polars</span>
-                                        <span class="bg-indigo-900 text-indigo-300 text-sm px-3 py-1 rounded">Cloudflare
+                                            class="bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 text-sm px-3 py-1 rounded">Polars</span>
+                                        <span
+                                            class="bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 text-sm px-3 py-1 rounded">Cloudflare
                                             R2</span>
-                                        <span class="bg-indigo-900 text-indigo-300 text-sm px-3 py-1 rounded">Clerk
+                                        <span
+                                            class="bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 text-sm px-3 py-1 rounded">Clerk
                                             Auth</span>
                                     </div>
                                     <div class="flex space-x-4">
                                         <a href="https://github.com/anthonyy616/antlyst"
-                                            class="text-indigo-400 hover:text-indigo-300 flex items-center">
+                                            class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 flex items-center">
                                             <i data-feather="github" class="mr-2"></i> Code
                                         </a>
                                         <a href="https://antlyst.xyz"
-                                            class="text-indigo-400 hover:text-indigo-300 flex items-center">
+                                            class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 flex items-center">
                                             <i data-feather="external-link" class="mr-2"></i> Live Site
                                         </a>
                                     </div>
@@ -331,29 +347,32 @@
                     <div class="project-slide">
                         <div class="project-slide-content">
                             <div
-                                class="project-card bg-gray-800 rounded-xl overflow-hidden border border-gray-700 max-w-2xl mx-auto">
+                                class="project-card bg-white dark:bg-gray-800 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 max-w-2xl mx-auto shadow-lg">
                                 <div class="h-64 bg-gradient-to-r from-indigo-500 to-purple-600"></div>
                                 <div class="p-8">
-                                    <h3 class="text-2xl font-bold mb-3">E-Commerce Web Store for Hair Services</h3>
-                                    <p class="text-gray-400 mb-6">Designed and developed a website for a hair service
+                                    <h3 class="text-2xl font-bold mb-3 text-gray-900 dark:text-white">E-Commerce Web
+                                        Store for Hair Services</h3>
+                                    <p class="text-gray-600 dark:text-gray-400 mb-6">Designed and developed a website
+                                        for a hair service
                                         business using HTML, CSS, JavaScript. Integrated Supabase as backend with Google
                                         OAuth 2.0 for authentication.</p>
                                     <div class="flex flex-wrap gap-2 mb-6">
                                         <span
-                                            class="bg-indigo-900 text-indigo-300 text-sm px-3 py-1 rounded">HTML</span>
-                                        <span class="bg-indigo-900 text-indigo-300 text-sm px-3 py-1 rounded">CSS</span>
+                                            class="bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 text-sm px-3 py-1 rounded">HTML</span>
                                         <span
-                                            class="bg-indigo-900 text-indigo-300 text-sm px-3 py-1 rounded">JavaScript</span>
+                                            class="bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 text-sm px-3 py-1 rounded">CSS</span>
                                         <span
-                                            class="bg-indigo-900 text-indigo-300 text-sm px-3 py-1 rounded">Supabase</span>
+                                            class="bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 text-sm px-3 py-1 rounded">JavaScript</span>
+                                        <span
+                                            class="bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 text-sm px-3 py-1 rounded">Supabase</span>
                                     </div>
                                     <div class="flex space-x-4">
                                         <a href="https://github.com/anthonyy616/hairsbytkm"
-                                            class="text-indigo-400 hover:text-indigo-300 flex items-center">
+                                            class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 flex items-center">
                                             <i data-feather="github" class="mr-2"></i> Code
                                         </a>
                                         <a href="https://hairsbytkm.vercel.app"
-                                            class="text-indigo-400 hover:text-indigo-300 flex items-center">
+                                            class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 flex items-center">
                                             <i data-feather="external-link" class="mr-2"></i> Live Site
                                         </a>
                                     </div>
@@ -366,27 +385,29 @@
                     <div class="project-slide">
                         <div class="project-slide-content">
                             <div
-                                class="project-card bg-gray-800 rounded-xl overflow-hidden border border-gray-700 max-w-2xl mx-auto">
+                                class="project-card bg-white dark:bg-gray-800 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 max-w-2xl mx-auto shadow-lg">
                                 <div class="h-64 bg-gradient-to-r from-indigo-500 to-purple-600"></div>
                                 <div class="p-8">
-                                    <h3 class="text-2xl font-bold mb-3">Network Traffic Anomaly Detection System</h3>
-                                    <p class="text-gray-400 mb-6">Built anomaly detection for network traffic.
+                                    <h3 class="text-2xl font-bold mb-3 text-gray-900 dark:text-white">Network Traffic
+                                        Anomaly Detection System</h3>
+                                    <p class="text-gray-600 dark:text-gray-400 mb-6">Built anomaly detection for network
+                                        traffic.
                                         Preprocessed data, applied algorithms like K-Means clustering, SVM, Random
                                         Forest. Included result visualizations, feature importance, and accuracy metrics
                                         analysis.</p>
                                     <div class="flex flex-wrap gap-2 mb-6">
                                         <span
-                                            class="bg-indigo-900 text-indigo-300 text-sm px-3 py-1 rounded">NumPy</span>
+                                            class="bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 text-sm px-3 py-1 rounded">NumPy</span>
                                         <span
-                                            class="bg-indigo-900 text-indigo-300 text-sm px-3 py-1 rounded">Scikit-learn</span>
+                                            class="bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 text-sm px-3 py-1 rounded">Scikit-learn</span>
                                         <span
-                                            class="bg-indigo-900 text-indigo-300 text-sm px-3 py-1 rounded">Pandas</span>
+                                            class="bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 text-sm px-3 py-1 rounded">Pandas</span>
                                         <span
-                                            class="bg-indigo-900 text-indigo-300 text-sm px-3 py-1 rounded">Matplotlib</span>
+                                            class="bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 text-sm px-3 py-1 rounded">Matplotlib</span>
                                     </div>
                                     <div class="flex space-x-4">
                                         <a href="https://github.com/anthonyy616/network-traffic-detection-anomaly"
-                                            class="text-indigo-400 hover:text-indigo-300 flex items-center">
+                                            class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 flex items-center">
                                             <i data-feather="github" class="mr-2"></i> Code
                                         </a>
                                     </div>
@@ -399,26 +420,29 @@
                     <div class="project-slide">
                         <div class="project-slide-content">
                             <div
-                                class="project-card bg-gray-800 rounded-xl overflow-hidden border border-gray-700 max-w-2xl mx-auto">
+                                class="project-card bg-white dark:bg-gray-800 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 max-w-2xl mx-auto shadow-lg">
                                 <div class="h-64 bg-gradient-to-r from-indigo-500 to-purple-600"></div>
                                 <div class="p-8">
-                                    <h3 class="text-2xl font-bold mb-3">Website-as-a-Service (WaaS) Platform</h3>
-                                    <p class="text-gray-400 mb-6">Designed and developed a website for affordable
+                                    <h3 class="text-2xl font-bold mb-3 text-gray-900 dark:text-white">
+                                        Website-as-a-Service (WaaS) Platform</h3>
+                                    <p class="text-gray-600 dark:text-gray-400 mb-6">Designed and developed a website
+                                        for affordable
                                         website creation services using HTML, CSS, JavaScript.</p>
                                     <div class="flex flex-wrap gap-2 mb-6">
                                         <span
-                                            class="bg-indigo-900 text-indigo-300 text-sm px-3 py-1 rounded">HTML</span>
-                                        <span class="bg-indigo-900 text-indigo-300 text-sm px-3 py-1 rounded">CSS</span>
+                                            class="bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 text-sm px-3 py-1 rounded">HTML</span>
                                         <span
-                                            class="bg-indigo-900 text-indigo-300 text-sm px-3 py-1 rounded">JavaScript</span>
+                                            class="bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 text-sm px-3 py-1 rounded">CSS</span>
+                                        <span
+                                            class="bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 text-sm px-3 py-1 rounded">JavaScript</span>
                                     </div>
                                     <div class="flex space-x-4">
                                         <a href="https://github.com/anthonyy616/rodan_main_source_code"
-                                            class="text-indigo-400 hover:text-indigo-300 flex items-center">
+                                            class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 flex items-center">
                                             <i data-feather="github" class="mr-2"></i> Code
                                         </a>
                                         <a href="https://rodan-site.vercel.app"
-                                            class="text-indigo-400 hover:text-indigo-300 flex items-center">
+                                            class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 flex items-center">
                                             <i data-feather="external-link" class="mr-2"></i> Demo
                                         </a>
                                     </div>
@@ -431,22 +455,25 @@
                     <div class="project-slide">
                         <div class="project-slide-content">
                             <div
-                                class="project-card bg-gray-800 rounded-xl overflow-hidden border border-gray-700 max-w-2xl mx-auto">
+                                class="project-card bg-white dark:bg-gray-800 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 max-w-2xl mx-auto shadow-lg">
                                 <div class="h-64 bg-gradient-to-r from-blue-500 to-cyan-600"></div>
                                 <div class="p-8">
-                                    <h3 class="text-2xl font-bold mb-3">Personal Portfolio Website</h3>
-                                    <p class="text-gray-400 mb-6">Created a responsive portfolio to showcase projects
+                                    <h3 class="text-2xl font-bold mb-3 text-gray-900 dark:text-white">Personal Portfolio
+                                        Website</h3>
+                                    <p class="text-gray-600 dark:text-gray-400 mb-6">Created a responsive portfolio to
+                                        showcase projects
                                         using HTML, CSS, JS.</p>
                                     <div class="flex flex-wrap gap-2 mb-6">
                                         <span
-                                            class="bg-indigo-900 text-indigo-300 text-sm px-3 py-1 rounded">HTML</span>
-                                        <span class="bg-indigo-900 text-indigo-300 text-sm px-3 py-1 rounded">CSS</span>
+                                            class="bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 text-sm px-3 py-1 rounded">HTML</span>
                                         <span
-                                            class="bg-indigo-900 text-indigo-300 text-sm px-3 py-1 rounded">JavaScript</span>
+                                            class="bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 text-sm px-3 py-1 rounded">CSS</span>
+                                        <span
+                                            class="bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 text-sm px-3 py-1 rounded">JavaScript</span>
                                     </div>
                                     <div class="flex space-x-4">
                                         <a href="https://github.com/anthonyy616/personal_portfolio_site"
-                                            class="text-indigo-400 hover:text-indigo-300 flex items-center">
+                                            class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 flex items-center">
                                             <i data-feather="github" class="mr-2"></i> Code
                                         </a>
                                     </div>
@@ -459,23 +486,25 @@
                     <div class="project-slide">
                         <div class="project-slide-content">
                             <div
-                                class="project-card bg-gray-800 rounded-xl overflow-hidden border border-gray-700 max-w-2xl mx-auto">
+                                class="project-card bg-white dark:bg-gray-800 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 max-w-2xl mx-auto shadow-lg">
                                 <div class="h-64 bg-gradient-to-r from-green-500 to-emerald-600"></div>
                                 <div class="p-8">
-                                    <h3 class="text-2xl font-bold mb-3">Customer Churn Prediction</h3>
-                                    <p class="text-gray-400 mb-6">ML model for Netflix churn prediction using Python,
+                                    <h3 class="text-2xl font-bold mb-3 text-gray-900 dark:text-white">Customer Churn
+                                        Prediction</h3>
+                                    <p class="text-gray-600 dark:text-gray-400 mb-6">ML model for Netflix churn
+                                        prediction using Python,
                                         Pandas, Scikit-learn.</p>
                                     <div class="flex flex-wrap gap-2 mb-6">
                                         <span
-                                            class="bg-indigo-900 text-indigo-300 text-sm px-3 py-1 rounded">Python</span>
+                                            class="bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 text-sm px-3 py-1 rounded">Python</span>
                                         <span
-                                            class="bg-indigo-900 text-indigo-300 text-sm px-3 py-1 rounded">Pandas</span>
+                                            class="bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 text-sm px-3 py-1 rounded">Pandas</span>
                                         <span
-                                            class="bg-indigo-900 text-indigo-300 text-sm px-3 py-1 rounded">Scikit-learn</span>
+                                            class="bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 text-sm px-3 py-1 rounded">Scikit-learn</span>
                                     </div>
                                     <div class="flex space-x-4">
                                         <a href="https://github.com/anthonyy616/netflix_churn_analysis"
-                                            class="text-indigo-400 hover:text-indigo-300 flex items-center">
+                                            class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 flex items-center">
                                             <i data-feather="github" class="mr-2"></i> Code
                                         </a>
                                     </div>
@@ -488,19 +517,23 @@
                     <div class="project-slide">
                         <div class="project-slide-content">
                             <div
-                                class="project-card bg-gray-800 rounded-xl overflow-hidden border border-gray-700 max-w-2xl mx-auto">
+                                class="project-card bg-white dark:bg-gray-800 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 max-w-2xl mx-auto shadow-lg">
                                 <div class="h-64 bg-gradient-to-r from-purple-500 to-pink-600"></div>
                                 <div class="p-8">
-                                    <h3 class="text-2xl font-bold mb-3">2421-to-Excess-3 BCD Code Converter</h3>
-                                    <p class="text-gray-400 mb-6">Digital circuit converter designed in Logisim.</p>
+                                    <h3 class="text-2xl font-bold mb-3 text-gray-900 dark:text-white">2421-to-Excess-3
+                                        BCD Code Converter</h3>
+                                    <p class="text-gray-600 dark:text-gray-400 mb-6">Digital circuit converter designed
+                                        in Logisim.</p>
                                     <div class="flex flex-wrap gap-2 mb-6">
                                         <span
-                                            class="bg-indigo-900 text-indigo-300 text-sm px-3 py-1 rounded">Logisim</span>
-                                        <span class="bg-indigo-900 text-indigo-300 text-sm px-3 py-1 rounded">Digital
+                                            class="bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 text-sm px-3 py-1 rounded">Logisim</span>
+                                        <span
+                                            class="bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 text-sm px-3 py-1 rounded">Digital
                                             Logic</span>
                                     </div>
                                     <div class="flex space-x-4">
-                                        <a href="#" class="text-indigo-400 hover:text-indigo-300 flex items-center">
+                                        <a href="#"
+                                            class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 flex items-center">
                                             <i data-feather="github" class="mr-2"></i> Code
                                         </a>
                                     </div>
@@ -526,39 +559,46 @@
 
         <!-- Resume Modal -->
         <div id="resumeModal" class="modal">
-            <div class="modal-content">
-                <span class="close-modal" onclick="closeResumeModal()">&times;</span>
-                <h2 class="text-3xl font-bold mb-6 text-indigo-400">Resume</h2>
+            <div class="modal-content bg-white dark:bg-gray-900 border-2 border-indigo-500 dark:border-indigo-600">
+                <span class="close-modal text-gray-500 dark:text-gray-400" onclick="closeResumeModal()">&times;</span>
+                <h2 class="text-3xl font-bold mb-6 text-indigo-600 dark:text-indigo-400">Resume</h2>
                 <div class="space-y-6">
                     <div>
-                        <h3 class="text-2xl font-semibold mb-3 text-white">Anthony Ogbuah</h3>
-                        <p class="text-gray-300">Computer Engineering Student | Data Science & ML Enthusiast</p>
-                        <p class="text-gray-400 mt-2">Email: anthonyogbuah@gmail.com</p>
-                        <p class="text-gray-400">LinkedIn: linkedin.com/in/anthony-ogbuah-995957339</p>
+                        <h3 class="text-2xl font-semibold mb-3 text-gray-900 dark:text-white">Anthony Ogbuah</h3>
+                        <p class="text-gray-700 dark:text-gray-300">Computer Engineering Student | Data Science & ML
+                            Enthusiast</p>
+                        <p class="text-gray-600 dark:text-gray-400 mt-2">Email: anthonyogbuah@gmail.com</p>
+                        <p class="text-gray-600 dark:text-gray-400">LinkedIn: linkedin.com/in/anthony-ogbuah-995957339
+                        </p>
                     </div>
 
                     <div>
-                        <h4 class="text-xl font-semibold mb-2 text-indigo-300">Education</h4>
-                        <p class="text-white">B.Sc. Computer Engineering</p>
-                        <p class="text-gray-300">European University of Lefke | 2022 - Present</p>
-                        <p class="text-gray-400">CGPA: 3.53/4.0 | High Honor's Student | 75% Scholarship</p>
+                        <h4 class="text-xl font-semibold mb-2 text-indigo-500 dark:text-indigo-300">Education</h4>
+                        <p class="text-gray-900 dark:text-white">B.Sc. Computer Engineering</p>
+                        <p class="text-gray-700 dark:text-gray-300">European University of Lefke | 2022 - Present</p>
+                        <p class="text-gray-600 dark:text-gray-400">CGPA: 3.53/4.0 | High Honor's Student | 75%
+                            Scholarship</p>
                     </div>
 
                     <div>
-                        <h4 class="text-xl font-semibold mb-2 text-indigo-300">Skills</h4>
-                        <p class="text-gray-300"><strong class="text-white">Programming:</strong> Python, C, C++,
+                        <h4 class="text-xl font-semibold mb-2 text-indigo-500 dark:text-indigo-300">Skills</h4>
+                        <p class="text-gray-700 dark:text-gray-300"><strong
+                                class="text-gray-900 dark:text-white">Programming:</strong> Python, C, C++,
                             JavaScript, HTML/CSS</p>
-                        <p class="text-gray-300"><strong class="text-white">ML/Data Science:</strong> TensorFlow,
+                        <p class="text-gray-700 dark:text-gray-300"><strong
+                                class="text-gray-900 dark:text-white">ML/Data Science:</strong> TensorFlow,
                             Scikit-learn, Pandas, NumPy, Matplotlib</p>
-                        <p class="text-gray-300"><strong class="text-white">Web Development:</strong> React, Node.js,
+                        <p class="text-gray-700 dark:text-gray-300"><strong class="text-gray-900 dark:text-white">Web
+                                Development:</strong> React, Node.js,
                             Express.js, Next.js</p>
-                        <p class="text-gray-300"><strong class="text-white">Tools:</strong> Git, Docker, VS Code,
+                        <p class="text-gray-700 dark:text-gray-300"><strong
+                                class="text-gray-900 dark:text-white">Tools:</strong> Git, Docker, VS Code,
                             Jupyter, MATLAB</p>
                     </div>
 
                     <div>
-                        <h4 class="text-xl font-semibold mb-2 text-indigo-300">Languages</h4>
-                        <p class="text-gray-300">English (Fluent), French (Working Knowledge)</p>
+                        <h4 class="text-xl font-semibold mb-2 text-indigo-500 dark:text-indigo-300">Languages</h4>
+                        <p class="text-gray-700 dark:text-gray-300">English (Fluent), French (Working Knowledge)</p>
                     </div>
                 </div>
             </div>
@@ -567,7 +607,8 @@
         <!-- Contact Section -->
         <section id="contact" class="py-20">
             <div class="max-w-3xl mx-auto">
-                <h2 class="text-3xl md:text-4xl font-bold mb-12 text-center">Get In Touch</h2>
+                <h2 class="text-3xl md:text-4xl font-bold mb-12 text-center text-gray-900 dark:text-white">Get In Touch
+                </h2>
 
                 <!-- Resume Button -->
                 <div class="flex justify-center mb-8">

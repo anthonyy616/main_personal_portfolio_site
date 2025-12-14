@@ -28,7 +28,7 @@ document.querySelectorAll('#mobile-menu a').forEach(link => {
 
 
 // Typing Animation
-const texts = ["machine learning models", "data-driven insights", "web applications"];
+const texts = ["machine learning models", "data-driven insights", "web applications", "complex algorithms"];
 let count = 0;
 let index = 0;
 let currentText = '';
@@ -51,7 +51,58 @@ function type() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', type);
+// Greeting Sequence
+const greetings = [
+    { main: "Hello", sub: "English" },
+    { main: "Bonjour", sub: "French" },
+    { main: "Kédu", sub: "Igbo" }
+];
+
+async function playGreetingSequence() {
+    const mainEl = document.getElementById('greeting-main');
+    const subEl = document.getElementById('greeting-sub');
+    const preloader = document.getElementById('preloader');
+
+    // Wait for fonts/styles
+    await new Promise(r => setTimeout(r, 100));
+
+    for (const greet of greetings) {
+        // Set text
+        mainEl.textContent = greet.main;
+        subEl.textContent = greet.sub;
+
+        // Fade In
+        mainEl.classList.remove('opacity-0');
+        subEl.classList.remove('opacity-0');
+
+        // Wait 0.75s
+        await new Promise(r => setTimeout(r, 750));
+
+        // Fade Out
+        mainEl.classList.add('opacity-0');
+        subEl.classList.add('opacity-0');
+
+        // Wait for fade out transition (300ms)
+        await new Promise(r => setTimeout(r, 300));
+    }
+
+    // Hide Preloader
+    preloader.classList.add('opacity-0');
+    preloader.style.pointerEvents = 'none'; // Prevent blocking clicks
+
+    // Initialize Background
+    if (window.initBackground) {
+        window.initBackground();
+    }
+
+    // Remove preloader from DOM after fade out to clean up
+    setTimeout(() => {
+        preloader.remove();
+        document.body.classList.remove('overflow-hidden');
+        // Start typing animation after greeting
+        type();
+    }, 700);
+}
 
 // Modern Project Slideshow Functionality
 let currentSlide = 0;
@@ -62,13 +113,15 @@ function initializeSlideshow() {
 
     // Create dots
     const dotsContainer = document.getElementById('slideDots');
-    dotsContainer.innerHTML = '';
-    for (let i = 0; i < totalSlides; i++) {
-        const dot = document.createElement('div');
-        dot.className = 'slide-dot';
-        if (i === 0) dot.classList.add('active');
-        dot.onclick = () => goToSlide(i);
-        dotsContainer.appendChild(dot);
+    if (dotsContainer) {
+        dotsContainer.innerHTML = '';
+        for (let i = 0; i < totalSlides; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'slide-dot';
+            if (i === 0) dot.classList.add('active');
+            dot.onclick = () => goToSlide(i);
+            dotsContainer.appendChild(dot);
+        }
     }
 
     // Update counter
@@ -78,7 +131,8 @@ function initializeSlideshow() {
     showSlide(0);
 }
 
-function changeSlide(direction) {
+// Make functions global so HTML onclick can access them
+window.changeSlide = function (direction) {
     const slides = document.querySelectorAll('.project-slide');
     const totalSlides = slides.length;
 
@@ -90,7 +144,7 @@ function changeSlide(direction) {
     showSlide(currentSlide);
 }
 
-function goToSlide(slideIndex) {
+window.goToSlide = function (slideIndex) {
     currentSlide = slideIndex;
     showSlide(currentSlide);
 }
@@ -115,7 +169,9 @@ function showSlide(slideIndex) {
     updateCounter();
 
     // Re-render feather icons
-    feather.replace();
+    if (typeof feather !== 'undefined') {
+        feather.replace();
+    }
 }
 
 function updateCounter() {
@@ -126,18 +182,75 @@ function updateCounter() {
     }
 }
 
-// Initialize slideshow on page load
-document.addEventListener('DOMContentLoaded', initializeSlideshow);
+// Start sequence on load
+document.addEventListener('DOMContentLoaded', () => {
+    // Only run if we haven't visited recently (optional, currently runs always as requested)
+    playGreetingSequence();
+    if (typeof feather !== 'undefined') {
+        feather.replace();
+    }
+    initializeSlideshow();
+});
 
 // Theme Toggle Functionality
 function toggleTheme() {
     const html = document.documentElement;
-    const newTheme = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-    html.setAttribute('data-theme', newTheme);
+    const isDark = html.classList.contains('dark') || html.getAttribute('data-theme') === 'dark';
+    const newTheme = isDark ? 'light' : 'dark';
+
+    // Update DOM
+    if (newTheme === 'dark') {
+        html.classList.add('dark');
+        html.setAttribute('data-theme', 'dark');
+    } else {
+        html.classList.remove('dark');
+        html.setAttribute('data-theme', 'light');
+    }
+
     localStorage.setItem('theme', newTheme);
+    if (window.updateBackgroundTheme) window.updateBackgroundTheme(newTheme === 'dark');
+
+    // Update Icons
+    document.querySelectorAll('#theme-toggle').forEach(btn => {
+        // Toggle icon visual
+        // We use feather.icons[name].toSvg() to generate the new SVG
+        const iconName = newTheme === 'dark' ? 'moon' : 'sun';
+        if (typeof feather !== 'undefined' && feather.icons[iconName]) {
+            btn.innerHTML = feather.icons[iconName].toSvg();
+        }
+    });
 }
 
-document.querySelectorAll('.theme-toggle').forEach(btn => btn.addEventListener('click', toggleTheme));
+// Initialize theme on load
+const savedTheme = localStorage.getItem('theme');
+const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+const initialTheme = savedTheme || (systemDark ? 'dark' : 'light');
 
-// Re-run Feather after load
-document.addEventListener('DOMContentLoaded', feather.replace);
+if (initialTheme === 'dark') {
+    document.documentElement.classList.add('dark');
+    document.documentElement.setAttribute('data-theme', 'dark');
+} else {
+    document.documentElement.classList.remove('dark');
+    document.documentElement.setAttribute('data-theme', 'light');
+}
+
+// Set initial icon state (since feather.replace() runs on DOMContentLoaded, we might need to override it or let it run then update)
+// However, feather.replace() reads the data-feather attribute. 
+// A better way for init is to set the correct data-feather attribute before replace() calls, OR update it after.
+
+document.addEventListener('DOMContentLoaded', () => {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    document.querySelectorAll('#theme-toggle').forEach(btn => {
+        const iconName = isDark ? 'moon' : 'sun';
+        // If feather check runs before this, we might need to update innerHTML directly
+        // But since this is inside the same event loop or after, let's just force the SVG update if feather is ready
+        if (typeof feather !== 'undefined' && feather.icons[iconName]) {
+            btn.innerHTML = feather.icons[iconName].toSvg();
+        } else {
+            // If feather hasn't run or we want to rely on it
+            btn.querySelector('i')?.setAttribute('data-feather', iconName);
+        }
+    });
+});
+
+document.querySelectorAll('#theme-toggle').forEach(btn => btn.addEventListener('click', toggleTheme));
