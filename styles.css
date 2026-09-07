@@ -237,6 +237,56 @@ header.dark button:hover {
     justify-content: center;
 }
 
+@media (max-width: 768px) {
+    .slideshow-nav {
+        gap: 12px;
+        margin-top: 24px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .slide-btn {
+        padding: 8px 15px;
+        font-size: 13px;
+        flex: 0 0 auto;
+    }
+
+    .slide-btn i {
+        width: 16px;
+        height: 16px;
+    }
+
+    .slide-counter {
+        font-size: 12px;
+        order: -1;
+    }
+
+    .slide-dots {
+        gap: 8px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .slide-dot {
+        width: 10px;
+        height: 10px;
+    }
+
+    /* Keep project image area from overlapping the nav/scroll zone */
+    .slideshow-container {
+        padding-bottom: 100px;
+    }
+
+    .project-slide-content {
+        max-width: 98%;
+        padding: 0 4px;
+    }
+
+    .project-card .h-64 {
+        height: 220px;
+    }
+}
+
 .project-slide {
     position: absolute;
     width: 100%;

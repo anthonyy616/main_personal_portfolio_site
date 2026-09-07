@@ -28,7 +28,7 @@ document.querySelectorAll('#mobile-menu a').forEach(link => {
 
 
 // Typing Animation
-const texts = ["machine learning models", "data-driven insights", "web applications", "complex algorithms"];
+const texts = ["deep learning models", "data pipelines and ETL frameworks", "application-specific integrated circuits", "web applications", "complex algorithms"];
 let count = 0;
 let index = 0;
 let currentText = '';
